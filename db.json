@@ -1,0 +1,15 @@
+{
+    "category": [
+      { "id": "1", "title": "Category 1"},
+      { "id": "2", "title": "Category 2"}
+    ],
+    "product": [
+      { "id": "1", "title": "Product 1", "categoryId": "1" },
+      { "id": "2", "title": "Product 2", "categoryId": "1" },
+      { "id": "3", "title": "Product 3", "categoryId": "2" }
+    ],
+    "user": {
+      "email": "test@gmail.com",
+      "password": "123456"
+    }
+  }
