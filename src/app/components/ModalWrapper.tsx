@@ -7,7 +7,7 @@ import { useLoginModal } from "./LoginModalContext";
 
 
 export default function ModalWrapper() {
-  const { isOpen, close } = useLoginModal();
+  const { isOpen } = useLoginModal();
 
   return isOpen ? <LoginModal /> : null;
 }
