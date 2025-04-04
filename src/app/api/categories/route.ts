@@ -4,7 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const data = await fetch(`${SERVER_API}/category`);
+        const url = req.nextUrl.searchParams.get('url');
+        
+        const data = await fetch(`${SERVER_API}/category?url=${url}`);
 
         if (!data.ok) {
             return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

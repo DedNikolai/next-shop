@@ -1,15 +1,25 @@
 {
     "category": [
-      { "id": "1", "title": "Category 1"},
-      { "id": "2", "title": "Category 2"}
+      { "id": "1", "title": "Category 1", "url": "category-1"},
+      { "id": "2", "title": "Category 2", "url": "category-2"}
     ],
     "product": [
-      { "id": "1", "title": "Product 1", "categoryId": "1" },
-      { "id": "2", "title": "Product 2", "categoryId": "1" },
-      { "id": "3", "title": "Product 3", "categoryId": "2" }
+      { "id": "1", "title": "Product 1", "categoryId": "1", "url": "product-1" },
+      { "id": "2", "title": "Product 2", "categoryId": "1", "url": "product-1" },
+      { "id": "3", "title": "Product 3", "categoryId": "2", "url": "product-1" }
     ],
-    "user": {
-      "email": "test@gmail.com",
-      "password": "123456"
-    }
+    "user": [
+      {
+        "id": "1",
+        "email": "user@gmail.com",
+        "password": "123456",
+        "role": "USER"
+      },
+      {
+        "id": "2",
+        "email": "admin@gmail.com",
+        "password": "123456",
+        "role": "ADMIN"
+      }
+    ]
   }
