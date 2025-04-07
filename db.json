@@ -12,11 +12,13 @@
       {
         "id": "1",
         "email": "user@gmail.com",
+        "name": "Test User",
         "password": "123456",
         "role": "USER"
       },
       {
         "id": "2",
+        "name": "Test Admin",
         "email": "admin@gmail.com",
         "password": "123456",
         "role": "ADMIN"

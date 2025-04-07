@@ -1,9 +1,10 @@
 import { SERVER_API } from '@/app/constants/app';
 import { User } from '@/app/types/user';
+import type { AuthOptions, User as AuthUser } from 'next-auth'; 
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-const handler = NextAuth({
+export const authOptions: AuthOptions  = {
   providers: [
     Credentials({
       name: 'Credentials',
@@ -11,7 +12,8 @@ const handler = NextAuth({
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+
+      async authorize(credentials): Promise<AuthUser | null>  {
 
         if (!credentials) {
             return null;
@@ -30,13 +32,12 @@ const handler = NextAuth({
         }
         
         const {password, ...userData} = user;
-        return userData;
+        return userData as AuthUser;
       },
     }),
   ],
-  
   secret: process.env.NEXTAUTH_SECRET,
-
+  
   session: {
     strategy: 'jwt',
   },
@@ -46,6 +47,28 @@ const handler = NextAuth({
 //   pages: {
 //     signIn: '/', // поки що головна сторінка
 //   },
-});
+
+callbacks: {
+  async jwt({ token, user }) {
+    // Якщо користувач щойно залогінився
+    if (user) {
+      token.id = user.id;
+      token.role = user.role;
+    }
+    return token;
+  },
+
+  async session({ session, token }) {
+    if (session?.user) {
+      session.user.id = token.id as string;
+      session.user.role = token.role as 'USER' | 'ADMIN';
+    }
+    return session;
+  },
+},
+
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

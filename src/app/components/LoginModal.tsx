@@ -19,7 +19,9 @@ export default function LoginModal() {
     });
 
     if (res?.ok) {
-      router.push('/dashboard');
+      alert('Авторизація успішна');
+      onClose();
+      // router.push('/dashboard');
     } else {
       alert('Невірний логін або пароль');
     }
@@ -30,7 +32,7 @@ export default function LoginModal() {
       <div className="bg-white p-6 rounded-xl w-[300px]">
         <div className='flex justify-between'>
             <h2 className="text-lg font-bold mb-4">Авторизація</h2>
-            <div><button onClick={onClose}>Close</button></div>
+            <div><button className='cursor-pointer' onClick={onClose}>Close</button></div>
         </div>
         <input
           type="email"
