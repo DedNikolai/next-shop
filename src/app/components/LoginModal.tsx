@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useLoginModal } from './LoginModalContext';
@@ -19,9 +19,17 @@ export default function LoginModal() {
     });
 
     if (res?.ok) {
-      alert('Авторизація успішна');
+      const session = await getSession(); 
+      const role = session?.user?.role;
+  
+      if (role === 'ADMIN') {
+        router.push('/dashboard');
+      } else if (role === 'USER') {
+        router.push('/');
+      } else {
+        router.push('/not-auth');
+      }
       onClose();
-      // router.push('/dashboard');
     } else {
       alert('Невірний логін або пароль');
     }
