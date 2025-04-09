@@ -45,6 +45,13 @@
       "email": "admin@gmail.com",
       "password": "123456",
       "role": "ADMIN"
+    },
+    {
+      "id": "697",
+      "name": "Микола",
+      "email": "nikolai.blashchuk@gmail.com",
+      "password": "123456",
+      "role": "USER"
     }
   ]
 }
