@@ -1,6 +1,6 @@
 'use client';
 
-import { getSession, signIn } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useLoginModal } from './LoginModalContext';
@@ -11,10 +11,12 @@ export default function LoginModal() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { onClose } = useLoginModal();
   const {onRegisterOpen} = useRegistrationModal();
 
   const handleLogin = async () => {
+    setIsLoading(true);
     const res = await signIn('credentials', {
       email,
       password,
@@ -39,6 +41,7 @@ export default function LoginModal() {
     } else {
       toast.error('Auth failed!!!(((')
     }
+    setIsLoading(false)
   };
 
   return (
@@ -62,8 +65,11 @@ export default function LoginModal() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleLogin} className="bg-blue-600 text-white w-full py-2 rounded">
-          Увійти
+        <button 
+          onClick={handleLogin} 
+          className={`${isLoading ? 'bg-grey-600' : 'bg-blue-600'} text-white w-full py-2 rounded`}
+        >
+          {isLoading ? 'Loading' : 'Увійти'}
         </button>
         <p className="text-sm text-center mt-4">
           Dont have account?{" "}
