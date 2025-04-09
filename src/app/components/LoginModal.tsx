@@ -4,12 +4,15 @@ import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useLoginModal } from './LoginModalContext';
+import toast from 'react-hot-toast';
+import { useRegistrationModal } from './RegistrationModalContext';
 
 export default function LoginModal() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { onClose } = useLoginModal();
+  const {onRegisterOpen} = useRegistrationModal();
 
   const handleLogin = async () => {
     const res = await signIn('credentials', {
@@ -21,17 +24,20 @@ export default function LoginModal() {
     if (res?.ok) {
       const session = await getSession(); 
       const role = session?.user?.role;
+
+      toast.success('Auth success!!!)))')
   
       if (role === 'ADMIN') {
         router.push('/dashboard');
       } else if (role === 'USER') {
         router.push('/');
       } else {
+        toast.error('Auth failed!!!(((')
         router.push('/not-auth');
       }
       onClose();
     } else {
-      alert('Невірний логін або пароль');
+      toast.error('Auth failed!!!(((')
     }
   };
 
@@ -59,6 +65,18 @@ export default function LoginModal() {
         <button onClick={handleLogin} className="bg-blue-600 text-white w-full py-2 rounded">
           Увійти
         </button>
+        <p className="text-sm text-center mt-4">
+          Dont have account?{" "}
+          <span
+            onClick={() => {
+              onClose();
+              onRegisterOpen();
+            }}
+            className="text-blue-600 cursor-pointer"
+          >
+            Registration
+          </span>
+        </p>
       </div>
     </div>
   );
