@@ -6,23 +6,24 @@ import AuthMenu from "./AuthMenu";
 export default async function Header() {
     const categories = await getCategories();
     return (
-        <header className="flex justify-between p-5">
-            <Link href={'/'}>
-                <div className="w-[20%]">LOGO</div>
-            </Link>
-            <ul className="flex w-[60%]">
-                {categories.map(category => (
-                    <Link key={category.id} href={`${ApiRoutes.CATALOG}/${category.url}`}>
-                        <li 
-                            className="mx-3"
+        <header className="bg-white shadow-sm sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+                <Link href="/" className="text-xl font-bold text-red-600 hover:opacity-80 transition">
+                🍕 FoodExpress
+                </Link>
+                <nav className="hidden md:flex gap-6 text-sm font-medium">
+                    {categories.map(category => (
+                        <Link 
+                            key={category.id} 
+                            href={`${ApiRoutes.CATALOG}/${category.url}`}
+                            className="hover:text-red-500 transition"
                         >
                             {category.title}
-                        </li>
-                    </Link>
-
-                ))}
-            </ul>
-            <AuthMenu />
+                        </Link>
+                    ))}
+                </nav >
+                <AuthMenu />
+            </div>
         </header>
     )
 }

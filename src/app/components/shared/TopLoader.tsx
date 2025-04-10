@@ -3,7 +3,7 @@ import NextTopLoader from 'nextjs-toploader';
 export default function TopLoader() {
     return (
         <NextTopLoader
-            color="#3b82f6"
+            color="#f1a10d"
             height={3}
             showSpinner={false}
             showAtBottom={false}
