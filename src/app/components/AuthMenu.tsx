@@ -11,11 +11,19 @@ export default function AuthMenu() {
     const session = useSession();
 
     if (session.status === 'loading') {
-        return <div className="text-sm text-gray-500 animate-pulse">Завантаження...</div>
+        return (
+            <div className="w-[10%] text-right flex justify-end pr-4 items-center text-gray-500 text-sm">
+              <span className="flex gap-1">
+                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:.1s]"></span>
+                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:.2s]"></span>
+                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:.3s]"></span>
+              </span>
+            </div>
+          );
     }
 
     return (
-        <div className="flex items-center gap-4 text-sm font-medium">
+        <div className="w-[10%] flex items-center gap-4 text-sm font-medium justify-end">
             {
                 !session.data ? 
                 <>
@@ -23,14 +31,14 @@ export default function AuthMenu() {
                         className="text-gray-700 hover:text-red-500 transition cursor-pointer"
                         onClick={open}
                     >
-                        LOIGIN
+                        Увійти
                     </button> 
                     <span className="text-gray-300">|</span> 
                     <button
                         onClick={onRegisterOpen}
                         className="text-gray-700 hover:text-red-500 transition cursor-pointer"
                     >
-                        SIGN IN
+                        Зареєструватись
                     </button> 
                 </>
                 :
@@ -38,11 +46,11 @@ export default function AuthMenu() {
                     {
                         session.data.user.role === 'USER' ?
                         <Link href="/profile" className="text-gray-700 hover:text-red-500 transition">
-                            Profile
+                            Профіль
                         </Link>
                         :
                         <Link href={'/dashboard'} className="text-gray-700 hover:text-red-500 transition">
-                            Admin
+                            Адмін
                         </Link>
                     } 
                     <span className="text-gray-300">|</span>
@@ -50,7 +58,7 @@ export default function AuthMenu() {
                         onClick={() => signOut()}
                         className="text-gray-700 hover:text-red-500 transition cursor-pointer"
                     >
-                        Logout
+                        Вийти
                     </button> 
                 </>
             }

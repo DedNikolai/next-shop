@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from "./Button";
+
 export default function Hero() {
   return (
     <section className="relative bg-yellow-100 py- px-4 sm:px-8 lg:px-16 flex flex-col-reverse md:flex-row items-center justify-between">
@@ -11,9 +13,7 @@ export default function Hero() {
         <p className="text-gray-700 text-lg mb-6">
           Замовляй свої улюблені страви — гарячі, свіжі та смачні. Швидка доставка до твоїх дверей!
         </p>
-        <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-full transition">
-          Замовити зараз 🍕
-        </button>
+            <Button text="Замовити зараз 🍕"/>
       </div>
 
       {/* Image */}

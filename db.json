@@ -2,13 +2,23 @@
   "category": [
     {
       "id": "1",
-      "title": "Category 1",
-      "url": "category-1"
+      "title": "Піцца",
+      "url": "pizza"
     },
     {
       "id": "2",
-      "title": "Category 2",
-      "url": "category-2"
+      "title": "Бургери",
+      "url": "burgers"
+    },
+    {
+      "id": "3",
+      "title": "Суші",
+      "url": "sushi"
+    },
+    {
+      "id": "4",
+      "title": "Закуски",
+      "url": "snecks"
     }
   ],
   "product": [
@@ -47,7 +57,7 @@
       "role": "ADMIN"
     },
     {
-      "id": "697",
+      "id": "822",
       "name": "Микола",
       "email": "nikolai.blashchuk@gmail.com",
       "password": "123456",

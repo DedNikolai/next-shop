@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { User } from '@/app/types/user';
 import toast from 'react-hot-toast';
+import ProfileSkeleton from '@/app/components/shared/ProfileSkeleton';
 
 type FormData = {
   name: string;
@@ -52,40 +53,42 @@ export default function ProfilePage() {
     ).finally(() => setLoading(false))
   };
 
-  if (status === 'loading' || loading) return <p>Завантаження...</p>;
+  if (status === 'loading' || loading) return <ProfileSkeleton />
   
   return (
-    <div className="max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-semibold mb-6">Мій профіль</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium">Імʼя</label>
-          <input
-            type="text"
-            {...register('name')}
-            className="w-full border p-2 rounded"
-          />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-        </div>
+    <div className="bg-yellow-50 py-12 px-4 md:px-10 min-h-screen">
+      <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+        <h1 className="text-3xl font-bold mb-8 text-gray-800">👤 Мій профіль</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="block font-medium mb-1 text-gray-700">Імʼя</label>
+            <input
+              type="text"
+              {...register('name')}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            {...register('email')}
-            className="w-full border p-2 rounded"
-          />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-        </div>
+          <div>
+            <label className="block font-medium mb-1 text-gray-700">Email</label>
+            <input
+              type="email"
+              {...register('email')}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Оновлення...' : 'Оновити'}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-[200px] bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 mt-5 rounded-full transition cursor-pointer"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Оновлення...' : 'Оновити'}
+          </button>
+        </form>
+        </div>
     </div>
   );
 }

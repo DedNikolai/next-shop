@@ -1,3 +1,4 @@
+import ProductsSection from "@/app/components/shared/ProductsSection";
 import { getCategories } from "@/app/services/categories";
 
 type Props = {
@@ -11,6 +12,8 @@ export default async function CategoryPage({params}: Props) {
     const category = await getCategories(dada.category);
 
     return (
-        <h1>Category: {category[0].title}</h1>
+        <ProductsSection
+            title={category[0].title} 
+        />
     )
 }
