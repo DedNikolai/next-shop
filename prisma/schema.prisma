@@ -36,7 +36,7 @@ model Category {
     id Int @id @default(autoincrement())
     name String @unique
     products Product[]
-    url String
+    url String @unique
     createAt DateTime @default(now())
     updateAt DateTime @updatedAt
 }
@@ -49,6 +49,8 @@ model Product {
     price Int
     category Category @relation(fields: [categoryId], references: [id])
     categoryId Int
+    addCount Int @default(0)
+    productUrl String @default("")
     
     // items ProductItem[]
     
