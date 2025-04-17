@@ -21,7 +21,7 @@ export default async function Header() {
                             href={`${ApiRoutes.CATALOG}/${category.url}`}
                             className="hover:text-red-500 transition"
                         >
-                            {category.title}
+                            {category.name}
                         </Link>
                     ))}
                 </nav >
