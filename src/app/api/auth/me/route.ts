@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../[...nextauth]/route";
 import { NextResponse } from "next/server";
-import { SERVER_API } from "@/app/constants/app";
+import { prisma } from "../../../../../prisma/prisma-client";
 
 export async function GET() {
   try {
@@ -10,15 +10,17 @@ export async function GET() {
     if (!session) {
       return NextResponse.json({ message: 'You are not authorised' }, { status: 401 });
     }
-
-    const res = await fetch(`${SERVER_API}/user/${session.user.id}`);
+    const user = await prisma.user.findFirst({
+      where: {
+        id: +session.user.id
+      }
+    })
     
-    if (!res.ok) {
-      return NextResponse.json({ message: 'Failed to fetch user data' }, { status: res.status });
+    if (!user) {
+      return NextResponse.json({ message: 'Failed to fetch user data' });
     }
 
-    const userData = await res.json(); // ✅ ВАЖЛИВО!
-    return NextResponse.json(userData);
+    return NextResponse.json(user);
 
   } catch (error) {
     console.log(error);
@@ -34,12 +36,20 @@ export async function PUT(req: Request) {
   }
 
   const body = await req.json();
-  const res = await fetch(`${SERVER_API}/user/${session.user.id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
 
-  const updatedUser = await res.json();
-  return NextResponse.json(updatedUser);
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: Number(session.user.id),
+      },
+      data: {
+        ...body,
+      },
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    return NextResponse.json({ message: 'Update failed' }, { status: 500 });
+  }
 }

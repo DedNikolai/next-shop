@@ -1,4 +1,4 @@
-import { User } from "../types/user";
+import { User } from "@prisma/client";
 import { ApiRoutes } from "./constants";
 import { axiosInstance } from "./instance";
 
@@ -8,7 +8,7 @@ export async function getCurrentUser(): Promise<User> {
     return data;
 }
 
-export async function updateCurrentUser(user: User): Promise<User> {
+export async function updateCurrentUser(user: {email: string, fullName: string}): Promise<User> {
     const {data} = await axiosInstance.put(`${ApiRoutes.USER}/me`, user);
     return data;
 }

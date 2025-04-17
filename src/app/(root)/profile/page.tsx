@@ -6,17 +6,17 @@ import { getCurrentUser, updateCurrentUser } from '@/app/services/auth';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { User } from '@/app/types/user';
 import toast from 'react-hot-toast';
 import ProfileSkeleton from '@/app/components/shared/ProfileSkeleton';
+import { User } from '@prisma/client';
 
 type FormData = {
-  name: string;
+  fullName: string;
   email: string;
 };
 
 const schema = yup.object().shape({
-  name: yup.string().required('Імʼя обовʼязкове'),
+  fullName: yup.string().required('Імʼя обовʼязкове'),
   email: yup.string().email('Некоректний email').required('Email обовʼязковий'),
 });
 
@@ -43,7 +43,7 @@ export default function ProfilePage() {
   }, [status]);
 
   const onSubmit = async (data: FormData) => {
-    const user = data as User;
+    const user = data;
     setLoading(true);
     updateCurrentUser(user).then(res => {
       reset(res);
@@ -64,10 +64,10 @@ export default function ProfilePage() {
             <label className="block font-medium mb-1 text-gray-700">Імʼя</label>
             <input
               type="text"
-              {...register('name')}
+              {...register('fullName')}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+            {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
           </div>
 
           <div>

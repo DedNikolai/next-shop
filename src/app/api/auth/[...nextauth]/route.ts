@@ -1,8 +1,7 @@
-import { SERVER_API } from '@/app/constants/app';
-import { User } from '@/app/types/user';
 import type { AuthOptions, User as AuthUser } from 'next-auth'; 
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { prisma } from '../../../../../prisma/prisma-client';
 
 export const authOptions: AuthOptions  = {
   providers: [
@@ -19,9 +18,11 @@ export const authOptions: AuthOptions  = {
             return null;
         }
 
-        const data = await fetch(`${SERVER_API}/user?email=${credentials?.email}`);
-        const users: User [] = await data.json();
-        const user = users[0];
+        const user = await prisma.user.findFirst({
+          where: {
+            email: credentials.email
+          }
+        })
 
         if (!user) {
             return null;
@@ -31,8 +32,8 @@ export const authOptions: AuthOptions  = {
           return null;
         }
         
-        const {password, ...userData} = user;
-        return userData as AuthUser;
+        const {password, fullName, id, ...userData} = user;
+        return {...userData, name: fullName, id: id.toString()} as AuthUser;
       },
     }),
   ],

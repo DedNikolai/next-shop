@@ -1,7 +1,7 @@
 'use client';
 
 import { getSession, signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useLoginModal } from './LoginModalContext';
 import { useRegistrationModal } from './RegistrationModalContext';
@@ -14,6 +14,7 @@ export default function LoginModal() {
   const [isLoading, setIsLoading] = useState(false);
   const { onClose } = useLoginModal();
   const { onRegisterOpen } = useRegistrationModal();
+  const pathname = usePathname();
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -30,8 +31,11 @@ export default function LoginModal() {
       toast.success('Авторизація успішна');
 
       if (role === 'ADMIN') router.push('/dashboard');
-      else if (role === 'USER') router.push('/');
-      else router.push('/not-auth');
+      else if (role === 'USER') {
+        if (pathname === '/not-auth') {
+          router.push('/');
+        }
+      } else router.push('/not-auth');
 
       onClose();
     } else {
