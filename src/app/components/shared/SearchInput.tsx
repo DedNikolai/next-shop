@@ -1,6 +1,6 @@
 export default function SearchInput() {
     return (
-        <div className="relative w-[30%]">
+        <div className="relative ">
             <input
                 type="text"
                 placeholder="Пошук..."

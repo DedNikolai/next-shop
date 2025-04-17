@@ -11,3 +11,8 @@ export async function getProducts(): Promise<ProductsWithCategory []> {
 
     return data;
 }
+
+export async function fetchProductByUrl(url:string) {
+  const {data} = await axiosInstance.get<Product>(`${ApiRoutes.PRODUCTS}/${ApiRoutes.PODUCT_BY_URL}?query=${url}`)
+  return data
+}
