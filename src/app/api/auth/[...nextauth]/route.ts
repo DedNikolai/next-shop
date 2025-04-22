@@ -2,6 +2,7 @@ import type { AuthOptions, User as AuthUser } from 'next-auth';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '../../../../../prisma/prisma-client';
+import { compare } from 'bcrypt';
 
 export const authOptions: AuthOptions  = {
   providers: [
@@ -28,10 +29,12 @@ export const authOptions: AuthOptions  = {
             return null;
         }
 
-        if (credentials.password !== user.password) {
+        const isPasswordValid = await compare(credentials.password, user.password);
+       
+        if (!isPasswordValid) {
           return null;
         }
-        
+
         const {password, fullName, id, ...userData} = user;
         return {...userData, name: fullName, id: id.toString()} as AuthUser;
       },
@@ -42,12 +45,6 @@ export const authOptions: AuthOptions  = {
   session: {
     strategy: 'jwt',
   },
-//   session: {
-//     strategy: 'jwt',
-//   },
-//   pages: {
-//     signIn: '/', // поки що головна сторінка
-//   },
 
 callbacks: {
   async jwt({ token, user }) {

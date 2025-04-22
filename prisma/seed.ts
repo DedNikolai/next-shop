@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { hashSync } from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -97,8 +98,8 @@ async function main() {
   // Створити користувачів
   await prisma.user.createMany({
     data: [
-      { email: 'user@gmail.com', fullName: 'Test User', password: '123456', role: 'USER' },
-      { email: 'admin@gmail.com', fullName: 'Test Admin', password: '123456', role: 'ADMIN' },
+      { email: 'user@gmail.com', fullName: 'Test User', password: hashSync('123456', 10), role: 'USER' },
+      { email: 'admin@gmail.com', fullName: 'Test Admin', password: hashSync('123456', 10), role: 'ADMIN' },
     ],
   });
 }
