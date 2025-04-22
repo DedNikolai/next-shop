@@ -12,7 +12,7 @@ export default function AuthMenu() {
 
     if (session.status === 'loading') {
         return (
-            <div className="flex items-center gap-4 text-sm font-medium justify-end min-w-[150px] whitespace-nowrap">
+            <div className="flex items-center gap-4 text-sm font-medium justify-end w-[15%] whitespace-nowrap">
               <span className="flex gap-1">
                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:.1s]"></span>
                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:.2s]"></span>
@@ -23,7 +23,7 @@ export default function AuthMenu() {
     }
 
     return (
-        <div className="flex items-center gap-4 text-sm font-medium justify-end">
+        <div className="flex items-center gap-4 text-sm font-medium justify-end w-[15%]">
             {
                 !session.data ? 
                 <>
