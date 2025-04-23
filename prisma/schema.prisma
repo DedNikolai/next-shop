@@ -15,7 +15,7 @@ model User {
     password String
     role     UserRole  @default(USER)
     verified DateTime?
-
+    cart Cart?
     // provider   String?
     // providerId String?
 
@@ -58,4 +58,27 @@ model Product {
     
     createAt DateTime @default(now())
     updateAt DateTime @updatedAt
+
+    CartItem CartItem[]
+}
+
+model Cart {
+  id          Int        @id @default(autoincrement())
+  user        User?      @relation(fields: [userId], references: [id])
+  userId      Int?        @unique
+  sessionId   String?    // для неавторизованих користувачів
+  items       CartItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  cartId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

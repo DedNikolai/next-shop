@@ -3,5 +3,6 @@ export enum ApiRoutes {
     CATEGORIES = '/categories',
     USER = '/auth',
     PRODUCTS = '/products',
-    PODUCT_BY_URL = '/url'
+    PODUCT_BY_URL = '/url',
+    CART = 'cart'
 }

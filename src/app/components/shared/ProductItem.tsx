@@ -5,8 +5,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ApiRoutes } from "@/app/services/constants";
 import { FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
+import { addProductToCart } from "@/app/services/cart";
+import toast from "react-hot-toast";
 
 interface Props {
+  id: number;
   title: string;
   description: string;
   price: number;
@@ -15,7 +18,7 @@ interface Props {
   categoryUrl: string;
 }
 
-export const ProductItem: FC<Props> = ({ title, description, imageUrl, price, url, categoryUrl }) => {
+export const ProductItem: FC<Props> = ({ id, title, description, imageUrl, price, url, categoryUrl }) => {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
 
@@ -23,8 +26,11 @@ export const ProductItem: FC<Props> = ({ title, description, imageUrl, price, ur
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleOrder = () => {
-    // TODO: реалізуй додавання в кошик
-    console.log(`Замовлено ${quantity} шт. "${title}"`);
+   addProductToCart(id, quantity).then(res => {
+    if (res.id) {
+      toast.success('Product added')
+    }
+   })
   };
 
   return (

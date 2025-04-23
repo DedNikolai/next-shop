@@ -17,6 +17,7 @@ const ProductsSection: FC<Props> = ({title, products, categoryUrl}) => {
                     {products.map(product => (
                         <ProductItem
                             key={product.id}
+                            id={product.id}
                             title={product.name} 
                             description={product.description}
                             imageUrl={product.imageUrl}
