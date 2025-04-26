@@ -3,7 +3,8 @@ import { prisma } from "../../../../prisma/prisma-client";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { productId, quantity, sessionId } = body;
+  const sessionId = req.headers.get('session-id');
+  const { productId, quantity } = body;
 
   if (!productId || !sessionId) {
     return NextResponse.json({ error: "Missing data" }, { status: 400 });
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
         quantity: existingItem.quantity + quantity,
       },
     });
-    return NextResponse.json(updated);
+
   } else {
     // 4. якщо нема — додати новий
     const created = await prisma.cartItem.create({
@@ -46,6 +47,48 @@ export async function POST(req: NextRequest) {
         quantity,
       },
     });
-    return NextResponse.json(created);
+
   }
+
+  const updatedCard = await prisma.cart.findFirst({ 
+    where: { sessionId },
+    include: {
+      items: {
+      include: {
+          product: true,
+      }
+      }
+  }
+  }); 
+  return NextResponse.json(updatedCard?.items || []);
 }
+
+export async function GET(req: NextRequest) {
+    try {
+        const sessionId = req.headers.get('session-id') || req.nextUrl.searchParams.get('session-id');
+
+        if (!sessionId) {
+            return NextResponse.json([]);
+        }
+    
+        const cart = await prisma.cart.findFirst({
+        where: { sessionId },
+        include: {
+            items: {
+            include: {
+                product: true,
+            }
+            }
+        }
+        });
+    
+        if (!cart) {
+            return NextResponse.json([]);
+        }
+    
+        return NextResponse.json(cart.items);
+    } catch(error) {
+        console.log('Server error', error);
+        return NextResponse.json({ message: 'Cant get cart' }, { status: 500 });
+    }
+  }
