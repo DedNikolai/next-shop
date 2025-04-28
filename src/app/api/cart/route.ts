@@ -50,17 +50,21 @@ export async function POST(req: NextRequest) {
 
   }
 
-  const updatedCard = await prisma.cart.findFirst({ 
-    where: { sessionId },
+  const cartItems = await prisma.cartItem.findMany({
+    where: {
+      cart: {
+        sessionId,
+      },
+    },
     include: {
-      items: {
-      include: {
-          product: true,
-      }
-      }
-  }
-  }); 
-  return NextResponse.json(updatedCard?.items || []);
+      product: true,
+    },
+    orderBy: {
+      createdAt: 'desc', // або 'asc'
+    },
+  });
+  
+  return NextResponse.json(cartItems);
 }
 
 export async function GET(req: NextRequest) {
@@ -71,24 +75,85 @@ export async function GET(req: NextRequest) {
             return NextResponse.json([]);
         }
     
-        const cart = await prisma.cart.findFirst({
-        where: { sessionId },
-        include: {
-            items: {
-            include: {
-                product: true,
-            }
-            }
-        }
+        const cartItems = await prisma.cartItem.findMany({
+          where: {
+            cart: {
+              sessionId,
+            },
+          },
+          include: {
+            product: true,
+          },
+          orderBy: {
+            createdAt: 'desc', // або 'asc'
+          },
         });
+        
     
-        if (!cart) {
-            return NextResponse.json([]);
-        }
     
-        return NextResponse.json(cart.items);
+        return NextResponse.json(cartItems);
     } catch(error) {
         console.log('Server error', error);
         return NextResponse.json({ message: 'Cant get cart' }, { status: 500 });
     }
+  }
+
+
+  export async function PATCH(req: NextRequest) {
+    const body = await req.json();
+    const sessionId = req.headers.get('session-id');
+    const { productId, quantity } = body;
+
+    if (!productId || !sessionId) {
+      return NextResponse.json({ error: "Missing data" }, { status: 400 });
+    }
+  
+    // 1. знайти або створити кошик по sessionId
+    let cart = await prisma.cart.findFirst({ where: { sessionId } });
+  
+    if (!cart) {
+      return NextResponse.json({ error: "No such cart" }, { status: 400 });
+    }
+  
+    // 2. перевірити, чи товар вже є в кошику
+    const existingItem = await prisma.cartItem.findFirst({
+      where: {
+        id: productId
+      },
+    });
+  
+    if (existingItem) {
+      // 3. якщо є — оновити кількість
+
+      if (quantity) {
+        await prisma.cartItem.update({
+          where: { id: existingItem.id },
+          data: {
+            quantity: quantity,
+          },
+        });
+      } else {
+        await prisma.cartItem.delete({
+          where: {id: existingItem.id}
+        })
+      }
+  
+    }
+  
+    const cartItems = await prisma.cartItem.findMany({
+      where: {
+        cart: {
+          sessionId,
+        },
+      },
+      include: {
+        product: true,
+      },
+      orderBy: {
+        createdAt: 'desc', // або 'asc'
+      },
+    });
+    
+
+    return NextResponse.json(cartItems);
   }

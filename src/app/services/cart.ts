@@ -20,3 +20,10 @@ export async function getCart(): Promise<CartItemWithProduct []> {
 
     return data;
 }
+
+
+export async function updateCartItemQuantity(productId: number, quantity: number): Promise<CartItemWithProduct []> {
+    const {data} = await axiosInstance.patch<CartItemWithProduct []>(`${ApiRoutes.CART}`, {productId, quantity});
+
+    return data;
+}
