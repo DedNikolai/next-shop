@@ -16,6 +16,7 @@ model User {
     role     UserRole  @default(USER)
     verified DateTime?
     cart Cart?
+    order Order[]
     // provider   String?
     // providerId String?
 
@@ -66,7 +67,7 @@ model Cart {
   id          Int        @id @default(autoincrement())
   user        User?      @relation(fields: [userId], references: [id])
   userId      Int?        @unique
-  sessionId   String?    // для неавторизованих користувачів
+  sessionId   String   // для неавторизованих користувачів
   items       CartItem[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -78,7 +79,25 @@ model CartItem {
   cartId    Int
   product   Product  @relation(fields: [productId], references: [id])
   productId Int
+  orderId   Int?
   quantity  Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  user        User?       @relation(fields: [userId], references: [id])
+  userId      Int?
+  token String?     // використовується, якщо користувач не авторизований
+  fullName    String
+  email       String
+  phone       String
+  address     String
+  comment     String?
+  total       Int
+  paymentType String // наприклад: "cash", "card"
+  items       Json
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }

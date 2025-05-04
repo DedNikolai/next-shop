@@ -1,22 +1,36 @@
-import { CartItem, Product } from '@prisma/client';
+import { CartItem, Product, Order, User } from '@prisma/client';
 import { create } from 'zustand';
 import { addProductToCart, getCart, updateCartItemQuantity } from '../services/cart';
-import { number } from 'yup';
 import toast from 'react-hot-toast';
+import axiosInstance from '../services/instance';
+import { ApiRoutes } from '../services/constants';
 
 interface CartItemWithProduct extends CartItem {
     product: Product;
-  }
-  
-  interface CartState {
+}
+
+interface OrderType {
+  userId?: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  comment?: string | null;
+  total: number;
+  paymentType: string;
+  items: string;
+}
+
+interface CartState {
     cartItems: CartItemWithProduct[];
     loading: boolean;
     fetchCart: () => void;
     addItem: (productId: number, quantity: number) => Promise<CartItemWithProduct []>;
     removeItem: (productId: number) => void;
-    clearCart: () => void;
+    createOrder: (data: OrderType) => Promise<Order>;
     updateQuantity: (productId: number, quantity: number) => void;
-  }
+    setLoading: (status: boolean) => void; 
+}
 
   export const useCartStore = create<CartState>((set) => ({
     cartItems: [],
@@ -66,7 +80,22 @@ interface CartItemWithProduct extends CartItem {
       }
     },
 
-    clearCart: () => set({ cartItems: [] }),
+    createOrder: async (data) => {
+      try {
+        set({loading: true})
+        const res = await axiosInstance.post(`${ApiRoutes.ORDER}`, data);
+        if (res.status === 200) {
+          toast.success('Order was created');
+          set({cartItems: []})
+        } else {
+          toast.error('Cant create order')
+        }
+        return res.data;
+      } catch(error) {
+        console.log(error)
+        toast.error("Cant create order")
+      } 
+    },
 
     updateQuantity: async (productId: number, quantity: number) => {
       try {
@@ -81,6 +110,10 @@ interface CartItemWithProduct extends CartItem {
       } finally {
         set({ loading: false });
       }
+    },
+
+    setLoading: (status: boolean) => {
+      set({loading: status})
     }
 
   }));
