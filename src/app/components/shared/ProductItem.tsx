@@ -1,12 +1,14 @@
 'use client';
 
 import { FC, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ApiRoutes } from "@/app/services/constants";
 import { FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
+import { useCartStore } from "@/app/store/cart-store";
+import { useShallow } from "zustand/shallow";
 
 interface Props {
+  id: number;
   title: string;
   description: string;
   price: number;
@@ -15,16 +17,24 @@ interface Props {
   categoryUrl: string;
 }
 
-export const ProductItem: FC<Props> = ({ title, description, imageUrl, price, url, categoryUrl }) => {
+export const ProductItem: FC<Props> = ({ id, title, description, imageUrl, price, url, categoryUrl }) => {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false)
+
+    const [addItem] = useCartStore(
+      useShallow(state => [
+        state.addItem,
+        state.loading
+      ])
+    );
 
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleOrder = () => {
-    // TODO: реалізуй додавання в кошик
-    console.log(`Замовлено ${quantity} шт. "${title}"`);
+    setLoading(true);
+    addItem(id, quantity).then(res => setLoading(false))
   };
 
   return (
@@ -66,9 +76,39 @@ export const ProductItem: FC<Props> = ({ title, description, imageUrl, price, ur
 
       <button
         onClick={handleOrder}
+        disabled={loading}
         className="mt-3 w-full flex justify-center items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-full transition"
       >
-        <FaShoppingCart /> Додати до кошика
+      {loading && (
+        <svg
+          className="animate-spin h-5 w-5 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 000 16v-4l-3.5 3.5L12 24v-4a8 8 0 01-8-8z"
+          ></path>
+        </svg>
+      )}
+        {loading ? (
+          'Завантаження...'
+        ) : (
+          <>
+            <FaShoppingCart /> Додати до кошика
+          </>
+        )}
+        
       </button>
     </div>
   );

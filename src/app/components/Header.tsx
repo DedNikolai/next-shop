@@ -5,6 +5,7 @@ import AuthMenu from "./AuthMenu";
 import Image from "next/image";
 import SearchInput from "./shared/SearchInput";
 import { FaShoppingCart } from "react-icons/fa";
+import {CartIcon} from "./shared/CartIcon";
 
 export default async function Header() {
     const categories = await getCategories();
@@ -38,9 +39,7 @@ export default async function Header() {
                             </Link>
                         ))}
                     </nav>
-                    <Link href="/cart" className="text-red-600 text-xl">
-                        <FaShoppingCart />
-                    </Link>
+                    <CartIcon />
                 </div>
             </div>
 
@@ -73,9 +72,7 @@ export default async function Header() {
                             </Link>
                         ))}
                     </nav>
-                    <Link href="/cart" className="text-red-600 text-xl">
-                        <FaShoppingCart />
-                    </Link>
+                    <CartIcon />
                 </div>
             </div>
         </header>
