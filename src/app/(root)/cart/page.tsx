@@ -2,6 +2,7 @@
 
 import CartSkeleton from '@/app/components/shared/CartSkeleton';
 import { useCartStore } from '@/app/store/cart-store';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
 
@@ -84,12 +85,14 @@ export default function CartPage() {
         </div>
 
         {/* Кнопка оформити */}
-        <button
-            onClick={() => {}}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-3 rounded-full text-center transition w-full sm:w-auto"
-        >
-            Оформити замовлення
-        </button>
+        <Link href={'/order'}>
+          <button
+              className="bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-3 rounded-full text-center transition w-full sm:w-auto"
+          >
+              Оформити замовлення
+          </button>
+        </Link>
+
         </div>
 
     </div>
