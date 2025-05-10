@@ -32,3 +32,28 @@ export async function GET(req: NextRequest) {
     }
 
 }
+
+export async function POST(req: NextRequest) {
+    try {
+        const body = await req.json();
+        const {name, url} = body;
+
+        if (!name || !url) {
+            return NextResponse.json({ error: "No neede data" }, { status: 500 });
+        }
+
+        const category = await prisma.category.create({
+            data: {
+                name, url
+            }
+        })
+
+        if (!category) {
+            return NextResponse.json({ error: "Cant create category" }, { status: 500 });
+        }
+
+        return NextResponse.json(category, {status: 200})
+    } catch(error) {
+        console.log(error)
+    }
+}
