@@ -10,7 +10,6 @@ export default function Providers({ children }: { children: ReactNode }) {
     <>
       <SessionProvider>{children}</SessionProvider>
       <Toaster />
-      <TopLoader />
     </>
   )
 

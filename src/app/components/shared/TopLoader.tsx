@@ -1,9 +1,13 @@
 import NextTopLoader from 'nextjs-toploader';
 
-export default function TopLoader() {
+type LoaderProps = {
+    color: string
+}
+
+export default function TopLoader({color}: LoaderProps) {
     return (
         <NextTopLoader
-            color="#f1a10d"
+            color={color}
             height={3}
             showSpinner={false}
             showAtBottom={false}

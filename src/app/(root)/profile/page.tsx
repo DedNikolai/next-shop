@@ -8,7 +8,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
 import ProfileSkeleton from '@/app/components/shared/ProfileSkeleton';
-import { User } from '@prisma/client';
 
 type FormData = {
   fullName: string;
