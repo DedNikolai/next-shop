@@ -7,6 +7,7 @@ import CategorySkeleton from "@/app/components/admin/CategorySkeleton";
 import { Category } from "@prisma/client";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import toast from "react-hot-toast";
 
 const schema = yup.object().shape({
   name: yup.string().required('Поле обовʼязкове'),
@@ -23,6 +24,7 @@ export default function AdminCategoriesPage() {
     handleSubmit,
     reset,
     setValue,
+    formState: {errors}
   } = useForm({ 
     defaultValues: { name: "", url: "" },
     resolver: yupResolver(schema)
@@ -41,9 +43,17 @@ export default function AdminCategoriesPage() {
 
   const onSubmit = async (data: { name: string; url: string }) => {
     if (editingCategory) {
-      await axios.put(`/api/categories/${editingCategory.id}`, data);
+      await axios.put(`/api/categories/${editingCategory.id}`, data).then(res => {
+        if (res.status === 200) {
+            toast.success('Category updated')
+        }
+      });
     } else {
-      await axios.post("/api/categories", data);
+      await axios.post("/api/categories", data).then(res => {
+        if (res.status === 200) {
+            toast.success('Category created')
+        }
+      });
     }
     reset();
     setEditingCategory(null);
@@ -58,7 +68,11 @@ export default function AdminCategoriesPage() {
 
   const onDelete = async (id: number) => {
     if (confirm("Ви впевнені, що хочете видалити цю категорію?")) {
-      await axios.delete(`/api/categories/${id}`);
+      await axios.delete(`/api/categories/${id}`).then(res => {
+        if (res.status === 200) {
+            toast.success('Category deleted')
+        }
+      });
       fetchCategories();
     }
   };
@@ -68,16 +82,20 @@ export default function AdminCategoriesPage() {
       <h2 className="text-2xl font-bold">Категорії товарів</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <label className="block font-medium mb-1 text-gray-700">Назва категорії</label>
         <input
           {...register("name", { required: true })}
           placeholder="Назва категорії"
           className="w-full p-2 border rounded"
         />
+        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+        <label className="block font-medium mb-1 text-gray-700">URL категорії</label>
         <input
           {...register("url", { required: true })}
           placeholder="URL категорії"
           className="w-full p-2 border rounded"
         />
+        {errors.url && <p className="text-red-500 text-sm mt-1">{errors.url.message}</p>}
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
