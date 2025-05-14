@@ -6,8 +6,19 @@ export type ProductsWithCategory= Prisma.ProductGetPayload<{
   include: { category: true };
 }>;
 
-export async function getProducts(): Promise<ProductsWithCategory []> {
-    const {data} = await axiosInstance.get<ProductsWithCategory []>(`${ApiRoutes.PRODUCTS}`);
+export type ProductResponse = {
+  products: ProductsWithCategory [],
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
+export async function getProducts(page?: number, limit?: number): Promise<ProductResponse> {
+    let url = `${ApiRoutes.PRODUCTS}`;
+    if (page && limit) {
+      url = `${ApiRoutes.PRODUCTS}?page=${page}&limit=${limit}`
+    }
+    const {data} = await axiosInstance.get<ProductResponse>(url);
 
     return data;
 }
