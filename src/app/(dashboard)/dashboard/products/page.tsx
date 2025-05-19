@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { getProducts, ProductsWithCategory } from '@/app/services/products'
+import { deleteProduct, getProducts, ProductsWithCategory } from '@/app/services/products'
+import toast from 'react-hot-toast'
 
 export default function AdminProductListPage() {
   const [products, setProducts] = useState<ProductsWithCategory[]>([])
@@ -13,24 +14,29 @@ export default function AdminProductListPage() {
   const [totalPages, setTotalPages] = useState(1)
 
   const ITEMS_PER_PAGE = 10
-  const router = useRouter()
+  const router = useRouter();
+
+  async function fetchProducts() {
+    setLoading(true)
+    const { products, total } = await getProducts(page, ITEMS_PER_PAGE)
+    setProducts(products)
+    setTotalPages(Math.ceil(total / ITEMS_PER_PAGE))
+    setLoading(false)
+  }
 
   useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true)
-      const { products, total } = await getProducts(page, ITEMS_PER_PAGE)
-      setProducts(products)
-      setTotalPages(Math.ceil(total / ITEMS_PER_PAGE))
-      setLoading(false)
-    }
-
     fetchProducts()
   }, [page])
 
   const handleDelete = async (id: number) => {
     if (confirm("Ви впевнені, що хочете видалити цей товар?")) {
       // await deleteProductById(id)
-      setProducts(prev => prev.filter(p => p.id !== id))
+      deleteProduct(id).then(res => {
+        if (res.status === 200) {
+          toast.success('Product deleted succesfully');
+          fetchProducts();
+        }
+      }) 
     }
   }
 

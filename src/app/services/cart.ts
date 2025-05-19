@@ -2,7 +2,7 @@ import { CartItem, Order, Product, User } from "@prisma/client";
 import { ApiRoutes } from "./constants";
 import { axiosInstance } from "./instance";
 
-interface CartItemWithProduct extends CartItem {
+export interface CartItemWithProduct extends CartItem {
     product: Product;
 }
 
