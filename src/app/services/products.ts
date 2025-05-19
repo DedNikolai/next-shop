@@ -27,3 +27,8 @@ export async function fetchProductByUrl(url:string) {
   const {data} = await axiosInstance.get<Product>(`${ApiRoutes.PRODUCTS}/${ApiRoutes.PODUCT_BY_URL}?query=${url}`)
   return data
 }
+
+export async function deleteProduct(productId: number) {
+  const result = await axiosInstance.delete(`${ApiRoutes.PRODUCTS}/${productId}`)
+  return result;
+}
